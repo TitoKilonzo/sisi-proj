@@ -7,6 +7,13 @@ export const FB_STATES = ["New", "In review", "Resolved"];
 
 export const clean = (v, max = 500) => String(v ?? "").replace(/[\u0000-\u001f<>]/g, "").trim().slice(0, max);
 export const kes = (n) => new Intl.NumberFormat("en-KE", { style: "currency", currency: "KES", maximumFractionDigits: 0 }).format(n);
+// Client side demo hashing (PBKDF2 via WebCrypto). A real backend must hash passwords server side.
+const hex = (b) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
+export async function hashPw(pw, salt = hex(crypto.getRandomValues(new Uint8Array(16)))) {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new TextEncoder().encode(salt), iterations: 150000 }, key, 256);
+  return { salt, hash: hex(bits) };
+}
 const statusFor = (p) => (p >= 100 ? "Completed" : p > 0 ? "Ongoing" : "Planned");
 
 const P = (id, title, ward, sector, progress, budget, votes, desc) => ({

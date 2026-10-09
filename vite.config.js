@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 const csp = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; " +
   "connect-src 'self'; form-action 'self'; base-uri 'none'; object-src 'none'";
@@ -11,4 +12,4 @@ const cspPlugin = {
   transformIndexHtml: (h) => h.replace("<!--CSP-->", `<meta http-equiv="Content-Security-Policy" content="${csp}">`)
 };
 
-export default defineConfig({ plugins: [react(), cspPlugin], base: "./" });
+export default defineConfig({ plugins: [tailwindcss(), react(), cspPlugin], base: "./" });

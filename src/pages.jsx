@@ -15,11 +15,23 @@ export function Home() {
   return (
     <>
       <Hero title="Your ward. Your projects. Your say." text="See what the county is building in Kilimani and Dagoretti North, vote on priorities and follow every shilling.">
-        <p className="actions"><Link className="btn" to="/projects">View projects <Icon n="arrow" size={18} /></Link> <Link className="btn alt" to="/participate">Take part</Link></p>
+        <p className="flex gap-3 flex-wrap mt-4">
+          <Link className="inline-flex items-center gap-2 bg-orange text-ink font-bold px-6 py-3 rounded-full no-underline shadow-[0_6px_16px_rgba(242,106,27,0.35)] hover:-translate-y-0.5 hover:bg-orange-light transition-all" to="/projects">View projects <Icon n="arrow" size={18} /></Link>
+          <Link className="inline-flex items-center gap-2 bg-blue text-ink font-bold px-6 py-3 rounded-full no-underline shadow-[0_6px_16px_rgba(142,214,240,0.5)] hover:-translate-y-0.5 transition-all" to="/participate">Take part</Link>
+        </p>
       </Hero>
-      <section className="wrap stats">{stats.map(([v, l]) => <div key={l}><strong>{v}</strong><span>{l}</span></div>)}</section>
-      <section className="wrap grid">{feats.map(([i, t, d]) => <article className="card" key={t}><Icon n={i} size={30} /><h3>{t}</h3><p>{d}</p></article>)}</section>
-      <section className="band"><div className="wrap"><h2>Most backed projects</h2><div className="grid">{top.map((p) => <ProjectCard key={p.id} p={p} />)}</div></div></section>
+      <section className="max-w-[1120px] w-[92%] mx-auto grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-4 -mt-[60px] relative">
+        {stats.map(([v, l]) => <div key={l} className="bg-white rounded-[14px] shadow-[0_10px_30px_rgba(15,42,58,0.10)] px-5 py-[18px] border-b-4 border-orange"><strong className="block text-2xl">{v}</strong><span className="text-muted text-sm">{l}</span></div>)}
+      </section>
+      <section className="max-w-[1120px] w-[92%] mx-auto grid gap-5 grid-cols-[repeat(auto-fit,minmax(260px,1fr))] py-9">
+        {feats.map(([i, t, d]) => <article className="bg-white border-2 border-blue border-t-[5px] border-t-orange rounded-[14px] p-[22px] shadow-[0_10px_30px_rgba(15,42,58,0.10)] transition-transform duration-200 hover:-translate-y-1" key={t}><span className="text-orange-dark"><Icon n={i} size={30} /></span><h3 className="mt-2 mb-1">{t}</h3><p className="text-muted">{d}</p></article>)}
+      </section>
+      <section className="bg-gradient-to-b from-blue-light to-white py-[30px] pb-2.5">
+        <div className="max-w-[1120px] w-[92%] mx-auto">
+          <h2 className="text-2xl mb-4">Most backed projects</h2>
+          <div className="grid gap-5 grid-cols-[repeat(auto-fit,minmax(260px,1fr))] py-4">{top.map((p) => <ProjectCard key={p.id} p={p} />)}</div>
+        </div>
+      </section>
     </>
   );
 }
@@ -40,16 +52,19 @@ export function Projects() {
   return (
     <>
       <Hero title="Projects" text="Search, filter and open any project to vote and comment." />
-      <section className="wrap">
-        <div className="filters">
-          <label className="search"><Icon n="search" size={18} /><input value={q} onChange={(e) => setQ(e.target.value.slice(0, 60))} placeholder="Search projects" aria-label="Search projects" /></label>
-          <select aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value)}><option value="">All statuses</option>{STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
-          <select aria-label="Ward" value={ward} onChange={(e) => setSp(e.target.value ? { ward: e.target.value } : {})}><option value="">All wards</option>{WARDS.map((w) => <option key={w}>{w}</option>)}</select>
-          <select aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value)}><option value="votes">Most votes</option><option value="progress">Most progress</option><option value="budget">Highest budget</option></select>
+      <section className="max-w-[1120px] w-[92%] mx-auto">
+        <div className="flex gap-3 flex-wrap pt-[34px]">
+          <label className="relative flex-[1_1_220px] m-0">
+            <span className="absolute left-3 top-[15px] text-muted"><Icon n="search" size={18} /></span>
+            <input className="block w-full px-3 py-[11px] pl-[38px] m-0 text-ink border-2 border-ink rounded-[10px] bg-white" value={q} onChange={(e) => setQ(e.target.value.slice(0, 60))} placeholder="Search projects" aria-label="Search projects" />
+          </label>
+          <select className="w-auto m-0 px-3 py-[11px] text-ink border-2 border-ink rounded-[10px] bg-white" aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value)}><option value="">All statuses</option>{STATUSES.map((s) => <option key={s}>{s}</option>)}</select>
+          <select className="w-auto m-0 px-3 py-[11px] text-ink border-2 border-ink rounded-[10px] bg-white" aria-label="Ward" value={ward} onChange={(e) => setSp(e.target.value ? { ward: e.target.value } : {})}><option value="">All wards</option>{WARDS.map((w) => <option key={w}>{w}</option>)}</select>
+          <select className="w-auto m-0 px-3 py-[11px] text-ink border-2 border-ink rounded-[10px] bg-white" aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value)}><option value="votes">Most votes</option><option value="progress">Most progress</option><option value="budget">Highest budget</option></select>
         </div>
-        <p className="muted" role="status">{list.length} project{list.length === 1 ? "" : "s"}</p>
-        <div className="grid">{list.map((p) => <ProjectCard key={p.id} p={p} />)}</div>
-        {!list.length && <p className="empty">No projects match your filters.</p>}
+        <p className="text-muted mt-4" role="status">{list.length} project{list.length === 1 ? "" : "s"}</p>
+        <div className="grid gap-5 grid-cols-[repeat(auto-fit,minmax(260px,1fr))] py-4">{list.map((p) => <ProjectCard key={p.id} p={p} />)}</div>
+        {!list.length && <p className="text-center p-10 text-muted">No projects match your filters.</p>}
       </section>
     </>
   );
@@ -65,24 +80,26 @@ export function ProjectDetail() {
   const name = (uid) => state.users.find((u) => u.id === uid)?.name || "Resident";
   return (
     <>
-      <Hero title={p.title} text={p.desc}><p><Pill status={p.status} /> <span className="muted">{p.ward} &middot; {p.sector}</span></p></Hero>
-      <section className="wrap two">
+      <Hero title={p.title} text={p.desc}><p className="mt-2"><Pill status={p.status} /> <span className="text-muted">{p.ward} &middot; {p.sector}</span></p></Hero>
+      <section className="max-w-[1120px] w-[92%] mx-auto grid gap-10 grid-cols-1 md:grid-cols-2 py-10">
         <div>
-          <h2>Progress</h2><Bar value={p.progress} /><p>{p.progress}% complete. Budget {kes(p.budget)}.</p>
+          <h2 className="text-2xl mb-3">Progress</h2>
+          <Bar value={p.progress} />
+          <p>{p.progress}% complete. Budget {kes(p.budget)}.</p>
           <p><strong>{p.votes}</strong> residents back this project.</p>
-          {user ? <button className="btn" disabled={voted} onClick={() => dispatch({ type: "vote", id: p.id })}>{voted ? "You voted" : "Vote for this project"}</button>
-            : <Link className="btn" to="/signin">Sign in to vote</Link>}
+          {user ? <button className="inline-flex items-center gap-2 bg-orange text-ink font-bold px-6 py-3 rounded-full cursor-pointer shadow-[0_6px_16px_rgba(242,106,27,0.35)] hover:-translate-y-0.5 hover:bg-orange-light transition-all disabled:opacity-60 disabled:cursor-default disabled:transform-none" disabled={voted} onClick={() => dispatch({ type: "vote", id: p.id })}>{voted ? "You voted" : "Vote for this project"}</button>
+            : <Link className="inline-flex items-center gap-2 bg-orange text-ink font-bold px-6 py-3 rounded-full no-underline shadow-[0_6px_16px_rgba(242,106,27,0.35)] hover:-translate-y-0.5 hover:bg-orange-light transition-all" to="/signin">Sign in to vote</Link>}
         </div>
         <div>
-          <h2>Comments</h2>
-          {p.comments.length === 0 && <p className="muted">No comments yet.</p>}
-          <ul className="plain">{p.comments.map((c) => <li key={c.id} className="comment"><strong>{name(c.userId)}</strong> <small className="muted">{c.date}</small><p>{c.text}</p></li>)}</ul>
+          <h2 className="text-2xl mb-3">Comments</h2>
+          {p.comments.length === 0 && <p className="text-muted">No comments yet.</p>}
+          <ul className="list-none p-0 mb-5 grid gap-3.5">{p.comments.map((c) => <li key={c.id} className="bg-blue-light rounded-[10px] px-3.5 py-3"><strong>{name(c.userId)}</strong> <small className="text-muted">{c.date}</small><p className="mt-1 mb-0">{c.text}</p></li>)}</ul>
           {user ? (
             <form onSubmit={(e) => { e.preventDefault(); dispatch({ type: "comment", id: p.id, text }); setText(""); }}>
-              <label>Add a comment<textarea rows="3" maxLength={400} value={text} onChange={(e) => setText(e.target.value)} required /></label>
-              <button className="btn sm" type="submit">Post</button>
+              <label className="block font-semibold mb-3.5">Add a comment<textarea className="block w-full mt-1.5 px-3 py-[11px] text-ink border-2 border-ink rounded-[10px] bg-white" rows="3" maxLength={400} value={text} onChange={(e) => setText(e.target.value)} required /></label>
+              <button className="inline-flex items-center gap-2 bg-orange text-ink font-bold px-[18px] py-2 text-sm rounded-full cursor-pointer shadow-[0_6px_16px_rgba(242,106,27,0.35)] hover:-translate-y-0.5 hover:bg-orange-light transition-all" type="submit">Post</button>
             </form>
-          ) : <p className="muted">Sign in to comment.</p>}
+          ) : <p className="text-muted">Sign in to comment.</p>}
         </div>
       </section>
     </>
@@ -95,15 +112,17 @@ export function Wards() {
   return (
     <>
       <Hero title="Wards" text="Dagoretti North has five wards. Open a ward to see its projects." />
-      <section className="wrap grid">
+      <section className="max-w-[1120px] w-[92%] mx-auto grid gap-5 grid-cols-[repeat(auto-fit,minmax(260px,1fr))] py-9">
         {WARDS.map((w) => {
           const ps = state.projects.filter((p) => p.ward === w);
           const fb = state.feedback.filter((f) => f.ward === w).length;
           return (
-            <article className="card" key={w}>
-              <Icon n="map" size={30} /><h3>{w}</h3><p>{info[w]}</p>
-              <p className="muted">{ps.length} projects &middot; {fb} feedback items</p>
-              <Link className="btn sm alt" to={`/projects?ward=${w}`}>View projects</Link>
+            <article className="bg-white border-2 border-blue border-t-[5px] border-t-orange rounded-[14px] p-[22px] shadow-[0_10px_30px_rgba(15,42,58,0.10)] transition-transform duration-200 hover:-translate-y-1" key={w}>
+              <span className="text-orange-dark"><Icon n="map" size={30} /></span>
+              <h3 className="mt-2 mb-1">{w}</h3>
+              <p>{info[w]}</p>
+              <p className="text-muted text-sm">{ps.length} projects &middot; {fb} feedback items</p>
+              <Link className="inline-flex items-center gap-2 bg-blue text-ink font-bold px-[18px] py-2 text-sm rounded-full no-underline shadow-[0_6px_16px_rgba(142,214,240,0.5)] hover:-translate-y-0.5 transition-all" to={`/projects?ward=${w}`}>View projects</Link>
             </article>
           );
         })}
@@ -129,14 +148,14 @@ export function Participate() {
   return (
     <>
       <Hero title="Participate" text="Report an issue or share an idea. Ward officers review every submission." />
-      <section className="wrap narrow">
+      <section className="max-w-[520px] w-[92%] mx-auto py-10">
         <form onSubmit={submit} noValidate>
-          <label>Ward<select value={ward} onChange={(e) => setWard(e.target.value)} required><option value="">Choose a ward</option>{WARDS.map((w) => <option key={w}>{w}</option>)}</select></label>
-          <label>Your message<textarea rows="6" maxLength={1000} value={text} onChange={(e) => setText(e.target.value)} required /></label>
-          <input className="hp" tabIndex="-1" autoComplete="off" aria-hidden="true" value={hp} onChange={(e) => setHp(e.target.value)} />
-          <button className="btn" type="submit">Send feedback</button>
-          {msg && <p className={"msg " + (msg.ok ? "ok" : "err")} role="status">{msg.t}</p>}
-          {!user && <p className="muted">You are not signed in. <Link to="/signin">Sign in</Link> to track your feedback.</p>}
+          <label className="block font-semibold mb-3.5">Ward<select className="block w-full mt-1.5 px-3 py-[11px] text-ink border-2 border-ink rounded-[10px] bg-white" value={ward} onChange={(e) => setWard(e.target.value)} required><option value="">Choose a ward</option>{WARDS.map((w) => <option key={w}>{w}</option>)}</select></label>
+          <label className="block font-semibold mb-3.5">Your message<textarea className="block w-full mt-1.5 px-3 py-[11px] text-ink border-2 border-ink rounded-[10px] bg-white" rows="6" maxLength={1000} value={text} onChange={(e) => setText(e.target.value)} required /></label>
+          <input className="absolute -left-[9999px]" tabIndex="-1" autoComplete="off" aria-hidden="true" value={hp} onChange={(e) => setHp(e.target.value)} />
+          <button className="inline-flex items-center gap-2 bg-orange text-ink font-bold px-6 py-3 rounded-full cursor-pointer shadow-[0_6px_16px_rgba(242,106,27,0.35)] hover:-translate-y-0.5 hover:bg-orange-light transition-all" type="submit">Send feedback</button>
+          {msg && <p className={`font-semibold mt-3 ${msg.ok ? "text-[#0a5d2c]" : "text-[#aa1111]"}`} role="status">{msg.t}</p>}
+          {!user && <p className="text-muted mt-3">You are not signed in. <Link to="/signin" className="text-orange-dark hover:underline">Sign in</Link> to track your feedback.</p>}
         </form>
       </section>
     </>
@@ -148,47 +167,86 @@ export function About() {
   return (
     <>
       <Hero title="About Sisi" text="A civic platform that makes county work visible and participation simple." />
-      <section className="wrap grid">{items.map(([t, d]) => <article className="card" key={t}><Icon n="doc" size={30} /><h3>{t}</h3><p>{d}</p></article>)}</section>
+      <section className="max-w-[1120px] w-[92%] mx-auto grid gap-5 grid-cols-[repeat(auto-fit,minmax(260px,1fr))] py-9">
+        {items.map(([t, d]) => <article className="bg-white border-2 border-blue border-t-[5px] border-t-orange rounded-[14px] p-[22px] shadow-[0_10px_30px_rgba(15,42,58,0.10)] transition-transform duration-200 hover:-translate-y-1" key={t}><span className="text-orange-dark"><Icon n="doc" size={30} /></span><h3 className="mt-2 mb-1">{t}</h3><p className="text-muted">{d}</p></article>)}
+      </section>
     </>
   );
 }
 
+const INPUT = "block w-full mt-1.5 px-3 py-[11px] text-ink border-2 border-ink rounded-[10px] bg-white";
+const LABEL = "block font-semibold mb-3.5";
+const BTN = "inline-flex items-center gap-2 bg-orange text-ink font-bold px-6 py-3 rounded-full cursor-pointer shadow-[0_6px_16px_rgba(242,106,27,0.35)] hover:-translate-y-0.5 hover:bg-orange-light transition-all disabled:opacity-60 disabled:cursor-default disabled:hover:translate-y-0";
+const EMAIL_RX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 export function Auth() {
   const { state, dispatch, user } = useApp();
   const nav = useNavigate();
-  const [f, setF] = useState({ name: "", email: "", pw: "" });
-  const [err, setErr] = useState("");
+  const [reg, setReg] = useState({ name: "", email: "", pw: "" });
+  const [log, setLog] = useState({ email: "", pw: "" });
+  const [errs, setErrs] = useState({ reg: "", log: "" });
+  const [busy, setBusy] = useState(false);
   if (user) return <Navigate to="/portal" replace />;
+  const fail = (k, m) => { setErrs({ reg: "", log: "", [k]: m }); setBusy(false); };
   const demo = (role) => { dispatch({ type: "login", id: state.users.find((u) => u.role === role).id }); nav("/portal"); };
-  const register = (e) => {
+
+  const signIn = async (e) => {
     e.preventDefault();
-    const email = clean(f.email, 120).toLowerCase();
-    if (clean(f.name, 60).length < 2) return setErr("Enter your name.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return setErr("Enter a valid email.");
-    if (f.pw.length < 10) return setErr("Use a password of at least 10 characters.");
-    if (state.users.some((u) => u.email === email)) return setErr("That email is already registered.");
-    dispatch({ type: "register", user: { id: Date.now(), name: clean(f.name, 60), email, role: "resident" } });
+    const email = clean(log.email, 120).toLowerCase();
+    if (!EMAIL_RX.test(email) || !log.pw) return fail("log", "Enter your email and password.");
+    setBusy(true);
+    const u = state.users.find((x) => x.email === email);
+    let ok = false;
+    if (u && u.pw) { const { hash } = await hashPw(log.pw, u.pw.salt); ok = hash === u.pw.hash; }
+    if (!ok) return fail("log", "Incorrect email or password.");
+    dispatch({ type: "login", id: u.id });
     nav("/portal");
   };
+
+  const register = async (e) => {
+    e.preventDefault();
+    const email = clean(reg.email, 120).toLowerCase();
+    if (clean(reg.name, 60).length < 2) return fail("reg", "Enter your name.");
+    if (!EMAIL_RX.test(email)) return fail("reg", "Enter a valid email.");
+    if (reg.pw.length < 10) return fail("reg", "Use a password of at least 10 characters.");
+    if (state.users.some((u) => u.email === email)) return fail("reg", "That email is already registered.");
+    setBusy(true);
+    const pw = await hashPw(reg.pw);
+    dispatch({ type: "register", user: { id: Date.now(), name: clean(reg.name, 60), email, role: "resident", pw } });
+    nav("/portal");
+  };
+
   const roles = [["resident", "Resident", "Vote, comment and track your feedback.", "user"], ["officer", "Ward officer", "Review feedback and update project progress.", "shield"], ["admin", "Administrator", "Manage projects, users and see ward analytics.", "chart"]];
   return (
     <>
-      <Hero title="Sign in" text="Explore the three portals with a demo account, or register as a resident." />
-      <section className="wrap grid">
+      <Hero title="Sign in" text="Sign in or register as a resident, or explore the three portals with a demo account." />
+      <section className="max-w-[1120px] w-[92%] mx-auto grid gap-5 grid-cols-[repeat(auto-fit,minmax(260px,1fr))] py-9">
         {roles.map(([r, t, d, i]) => (
-          <article className="card" key={r}><Icon n={i} size={30} /><h3>{t}</h3><p>{d}</p><button className="btn sm" onClick={() => demo(r)}>Continue as {t.toLowerCase()}</button></article>
+          <article className="bg-white border-2 border-blue border-t-[5px] border-t-orange rounded-[14px] p-[22px] shadow-[0_10px_30px_rgba(15,42,58,0.10)] transition-transform duration-200 hover:-translate-y-1" key={r}>
+            <span className="text-orange-dark"><Icon n={i} size={30} /></span>
+            <h3 className="mt-2 mb-1">{t}</h3>
+            <p className="text-muted mb-3">{d}</p>
+            <button className={BTN + " !px-[18px] !py-2 text-sm"} onClick={() => demo(r)}>Continue as {t.toLowerCase()}</button>
+          </article>
         ))}
       </section>
-      <section className="wrap narrow">
-        <form onSubmit={register} noValidate>
-          <h2>Register as a resident</h2>
-          <label>Full name<input autoComplete="name" maxLength={60} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></label>
-          <label>Email<input type="email" autoComplete="email" maxLength={120} value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></label>
-          <label>Password<input type="password" autoComplete="new-password" value={f.pw} onChange={(e) => setF({ ...f, pw: e.target.value })} /></label>
-          <button className="btn" type="submit">Create account</button>
-          {err && <p className="msg err" role="alert">{err}</p>}
-          <p className="small">Demo mode: accounts live in this browser only. Real authentication needs a server.</p>
+      <section className="max-w-[1120px] w-[92%] mx-auto grid gap-10 md:grid-cols-2 py-10">
+        <form onSubmit={signIn} noValidate>
+          <h2 className="text-2xl mb-4">Resident sign in</h2>
+          <label className={LABEL}>Email<input className={INPUT} type="email" autoComplete="username" maxLength={120} value={log.email} onChange={(e) => setLog({ ...log, email: e.target.value })} /></label>
+          <label className={LABEL}>Password<input className={INPUT} type="password" autoComplete="current-password" value={log.pw} onChange={(e) => setLog({ ...log, pw: e.target.value })} /></label>
+          <button className={BTN} type="submit" disabled={busy}>Sign in</button>
+          {errs.log && <p className="font-semibold mt-3 text-[#aa1111]" role="alert">{errs.log}</p>}
         </form>
+        <form onSubmit={register} noValidate>
+          <h2 className="text-2xl mb-4">Register as a resident</h2>
+          <label className={LABEL}>Full name<input className={INPUT} autoComplete="name" maxLength={60} value={reg.name} onChange={(e) => setReg({ ...reg, name: e.target.value })} /></label>
+          <label className={LABEL}>Email<input className={INPUT} type="email" autoComplete="email" maxLength={120} value={reg.email} onChange={(e) => setReg({ ...reg, email: e.target.value })} /></label>
+          <label className={LABEL}>Password (10 characters or more)<input className={INPUT} type="password" autoComplete="new-password" value={reg.pw} onChange={(e) => setReg({ ...reg, pw: e.target.value })} /></label>
+          <button className={BTN} type="submit" disabled={busy}>Create account</button>
+          {errs.reg && <p className="font-semibold mt-3 text-[#aa1111]" role="alert">{errs.reg}</p>}
+        </form>
+        <p className="text-sm text-muted md:col-span-2">Demo mode: accounts and password hashes live in this browser only. Real authentication needs a server.</p>
       </section>
     </>
   );

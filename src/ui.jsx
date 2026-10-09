@@ -12,27 +12,37 @@ const PATHS = {
 };
 
 export const Icon = ({ n, size = 22 }) => (
-  <svg className="ic" width={size} height={size} viewBox="0 0 24 24" aria-hidden="true"><path d={PATHS[n]} /></svg>
+  <svg className="fill-none stroke-current align-middle flex-none" style={{ strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" }} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true"><path d={PATHS[n]} /></svg>
 );
 
-export const Pill = ({ status }) => <span className={"pill " + status.toLowerCase().replace(" ", "-")}>{status}</span>;
+const pillColors = {
+  planned: "bg-blue-light border-blue text-ink",
+  ongoing: "bg-orange text-ink border-orange",
+  completed: "bg-ink text-white border-ink",
+  new: "bg-blue-light border-blue text-ink",
+  "in review": "bg-orange text-ink border-orange",
+  resolved: "bg-ink text-white border-ink"
+};
+
+export const Pill = ({ status }) => (
+  <span className={`inline-block text-xs font-bold px-3 py-0.5 rounded-full border ${pillColors[status.toLowerCase()] || "bg-blue-light border-blue text-ink"}`}>{status}</span>
+);
 
 export const Bar = ({ value }) => (
-  <div className="bar" role="progressbar" aria-valuenow={value} aria-valuemin="0" aria-valuemax="100">
-    <i style={{ width: value + "%" }} />
+  <div className="h-2.5 bg-blue-light rounded-md overflow-hidden my-2.5 mb-1.5" role="progressbar" aria-valuenow={value} aria-valuemin="0" aria-valuemax="100">
+    <i className="block h-full bg-gradient-to-r from-orange to-orange-light transition-[width] duration-500" style={{ width: value + "%" }} />
   </div>
 );
 
-export const Hero = ({ title, text, children, art }) => (
-  <section className="hero">
+export const Hero = ({ title, text, children }) => (
+  <section className="relative overflow-hidden py-20 pb-[130px] bg-blue-light">
     <Skyline />
-    <div className="wrap hero-in">
+    <div className="max-w-[1120px] w-[92%] mx-auto relative">
       <div>
-        <h1>{title}</h1>
-        {text && <p className="lead">{text}</p>}
+        <h1 className="text-[clamp(2.1rem,6vw,3.8rem)] max-w-[16ch] tracking-tight mb-2">{title}</h1>
+        {text && <p className="text-lg max-w-[48ch]">{text}</p>}
         {children}
       </div>
-      {art}
     </div>
   </section>
 );
@@ -40,7 +50,7 @@ export const Hero = ({ title, text, children, art }) => (
 export function Skyline() {
   const b = [[10, 70, 130], [90, 50, 210], [150, 80, 160], [240, 55, 270], [305, 90, 180], [405, 50, 240], [465, 75, 150], [550, 60, 220], [620, 95, 170], [725, 55, 260], [790, 75, 140], [875, 65, 200], [950, 85, 160], [1050, 55, 250], [1115, 80, 180]];
   return (
-    <svg className="sky" viewBox="0 0 1200 380" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 380" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
       <defs>
         <linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#8ed6f0" /><stop offset="1" stopColor="#eaf8fd" /></linearGradient>
         <radialGradient id="sun"><stop offset="0" stopColor="#ff9a55" /><stop offset="1" stopColor="#f26a1b" /></radialGradient>
@@ -61,12 +71,12 @@ export function Skyline() {
 
 export function ProjectCard({ p }) {
   return (
-    <article className="card proj">
-      <div className="row"><Pill status={p.status} /><span className="muted">{p.sector}</span></div>
-      <h3><Link to={`/projects/${p.id}`}>{p.title}</Link></h3>
-      <p className="muted"><Icon n="map" size={16} /> {p.ward} &middot; {kes(p.budget)}</p>
+    <article className="bg-white border-2 border-blue border-t-[5px] border-t-orange rounded-[14px] p-[22px] shadow-[0_10px_30px_rgba(15,42,58,0.10)] transition-transform duration-200 hover:-translate-y-1">
+      <div className="flex justify-between items-center gap-2.5 flex-wrap"><Pill status={p.status} /><span className="text-muted">{p.sector}</span></div>
+      <h3 className="my-2"><Link to={`/projects/${p.id}`} className="text-ink no-underline hover:text-orange-dark">{p.title}</Link></h3>
+      <p className="text-muted text-sm"><Icon n="map" size={16} /> {p.ward} &middot; {kes(p.budget)}</p>
       <Bar value={p.progress} />
-      <div className="row"><small>{p.progress}% complete</small><small>{p.votes} votes</small></div>
+      <div className="flex justify-between items-center gap-2.5 flex-wrap"><small>{p.progress}% complete</small><small>{p.votes} votes</small></div>
     </article>
   );
 }

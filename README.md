@@ -2,7 +2,7 @@
 
 Sisi is a public participation platform for Kilimani Ward in Dagoretti North, Nairobi County. It lets residents follow county projects, vote on priorities, comment, and send feedback, while ward officers and administrators manage the response from their own portals.
 
-Built with React 18, React Router 6 and Vite. JavaScript only. No other runtime dependencies.
+Built with React 18, React Router 6 and Vite. JavaScript only. Styled with Tailwind CSS 4. No other runtime dependencies.
 
 ## Contents of this zip
 
@@ -71,6 +71,10 @@ Other commands:
 
 Demo access: open Sign in and press Continue as resident, ward officer or administrator.
 
+Real resident accounts: register on the Sign in page, then sign out and back in with the same email and password. Passwords are hashed in the browser with PBKDF2 (salted, 150000 iterations) and stored only in this browser. Demo accounts have no password and use the buttons.
+
+Available scripts (running npm run with no name only lists them): dev, start (same as dev), build, preview.
+
 ## Deploy to production
 
 The dist/ folder in this zip is already built.
@@ -97,6 +101,6 @@ Before real use, a backend must provide: real authentication with hashed passwor
 
 - No real photographs yet: add images under src/assets/ and import them
 - No backend: replace the reducer actions in src/store.jsx with API calls, backed by a database (Turso is a good fit)
-- Sign in is demo only
+- Sign in is demo only: hashing and accounts are client side
 - Replace all sample projects, ward figures and contact details with real county data
 - Possible additions: SMS or email notifications, maps, exports, multilingual support (English and Kiswahili)
