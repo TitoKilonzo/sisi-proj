@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { kes } from "./store.jsx";
 
 const PATHS = {
+  home: "M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6", logout: "M10 4H5v16h5M16 8l4 4-4 4M20 12H9", plus: "M12 5v14M5 12h14",
+  trend: "M3 17l6-6 4 4 8-8M15 7h6v6", lock: "M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4",
   menu: "M4 7h16M4 12h16M4 17h16", x: "M6 6l12 12M18 6L6 18",
   map: "M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z",
   vote: "M4 13l4 4L20 6", chat: "M4 5h16v11H9l-5 4z", chart: "M4 20V4M4 20h16M8 16v-5M13 16V8M18 16v-9",

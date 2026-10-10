@@ -2,8 +2,9 @@ import { useState } from "react";
 import { NavLink, Link, Navigate, Route, Routes, Outlet, useLocation } from "react-router-dom";
 import { useApp } from "./store.jsx";
 import { Icon } from "./ui.jsx";
-import { Home, Projects, ProjectDetail, Wards, Participate, About, Auth } from "./pages.jsx";
-import { Portal } from "./portal.jsx";
+import { Home, Projects, ProjectDetail, Wards, Participate, About } from "./pages.jsx";
+import { Auth } from "./auth.jsx";
+import { PortalShell, Overview, Votes, Feedback, Progress, NewProject, Users, Profile } from "./portal.jsx";
 
 const NAV = [["/", "Home"], ["/projects", "Projects"], ["/wards", "Wards"], ["/participate", "Participate"], ["/about", "About"]];
 
@@ -65,9 +66,17 @@ export default function App() {
         <Route path="wards" element={<Wards />} />
         <Route path="participate" element={<Participate />} />
         <Route path="about" element={<About />} />
-        <Route path="signin" element={<Auth />} />
-        <Route path="portal" element={<Guard><Portal /></Guard>} />
         <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+      <Route path="signin" element={<Auth />} />
+      <Route path="portal" element={<Guard><PortalShell /></Guard>}>
+        <Route index element={<Overview />} />
+        <Route path="votes" element={<Guard roles={["resident"]}><Votes /></Guard>} />
+        <Route path="feedback" element={<Feedback />} />
+        <Route path="progress" element={<Guard roles={["officer", "admin"]}><Progress /></Guard>} />
+        <Route path="new" element={<Guard roles={["admin"]}><NewProject /></Guard>} />
+        <Route path="users" element={<Guard roles={["admin"]}><Users /></Guard>} />
+        <Route path="profile" element={<Profile />} />
       </Route>
     </Routes>
   );

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
 
-const KEY = "sisi_v2";
+const KEY = "sisi_v3";
 export const WARDS = ["Kilimani", "Kawangware", "Kileleshwa", "Gatina", "Kabiria"];
 export const STATUSES = ["Planned", "Ongoing", "Completed"];
 export const FB_STATES = ["New", "In review", "Resolved"];
@@ -23,9 +23,9 @@ const P = (id, title, ward, sector, progress, budget, votes, desc) => ({
 // Sample data. Replace with API calls when a backend exists.
 const seed = () => ({
   users: [
-    { id: 1, name: "Amina Wanjiru", email: "resident@sisi.demo", role: "resident" },
-    { id: 2, name: "James Otieno", email: "officer@sisi.demo", role: "officer" },
-    { id: 3, name: "Grace Mutua", email: "admin@sisi.demo", role: "admin" }
+    { id: 1, name: "Amina Wanjiru", email: "amina.wanjiru@sisi.local", role: "resident", pw: {"salt": "c6bb072de5b34a6f48f2c3272a5af1be", "hash": "e6415ffc7ce5cd598e8ac19aa2b2dede1aa4e1694c6f7651ead4a87ff17e3259"} },
+    { id: 2, name: "James Otieno", email: "james.otieno@sisi.local", role: "officer", pw: {"salt": "410d92840bd28bbec82ff94924d37ca8", "hash": "4e9d8859eecf6f1bb7abf846574cf0fd85e2350c65bee386cdabe502c343e5b8"} },
+    { id: 3, name: "Grace Mutua", email: "grace.mutua@sisi.local", role: "admin", pw: {"salt": "239f85fb4d8364114167789b4d5a493c", "hash": "4b96129d849873f4f6b068b4397b135b6655683f96a6e001957a15a2446edd0c"} }
   ],
   projects: [
     P(1, "Kilimani drainage rehabilitation", "Kilimani", "Roads and drainage", 64, 42000000, 128, "Desilting and reconstruction of storm drains along the main estate roads to end seasonal flooding."),
@@ -98,6 +98,13 @@ function reducer(s, a) {
       const p = P(Date.now(), title, a.ward, clean(a.sector, 40) || "General", 0, Math.max(0, Number(a.budget) || 0), 0, clean(a.desc, 400));
       return { ...s, projects: [p, ...s.projects] };
     }
+    case "setRole": {
+      if (roleOf(s) !== "admin" || a.id === s.session || !["resident", "officer", "admin"].includes(a.role)) return s;
+      return { ...s, users: s.users.map((u) => (u.id === a.id ? { ...u, role: a.role } : u)) };
+    }
+    case "setPw":
+      if (!s.session || !a.pw?.salt || !a.pw?.hash) return s;
+      return { ...s, users: s.users.map((u) => (u.id === s.session ? { ...u, pw: a.pw } : u)) };
     default: return s;
   }
 }

@@ -22,9 +22,9 @@ Built with React 18, React Router 6 and Vite. JavaScript only. Styled with Tailw
 | Role | How to reach it | What it can do |
 | --- | --- | --- |
 | Visitor | No sign in | Browse projects, wards and about pages, submit feedback |
-| Resident | Register, or use the demo button | Vote once per project, comment, submit and track feedback |
-| Ward officer | Demo button | Review the feedback queue and change status, update project progress with sliders |
-| Administrator | Demo button | Overview with totals and a votes by ward chart, add projects, view users, plus all officer tools |
+| Resident | Register on the Sign in page | Vote once per project, comment, submit and track feedback |
+| Ward officer | README credentials | Review the feedback queue and change status, update project progress with sliders |
+| Administrator | README credentials | Overview with totals and a votes by ward chart, add projects, view users, plus all officer tools |
 
 ### Pages
 
@@ -34,8 +34,11 @@ Built with React 18, React Router 6 and Vite. JavaScript only. Styled with Tailw
 - Wards: five wards (Kilimani, Kawangware, Kileleshwa, Gatina, Kabiria) with links to their projects
 - Participate: feedback form with a spam trap field
 - About: CIDP, CADP and CBEF explained
-- Sign in: demo accounts and resident registration
-- Portal: role specific tools (requires sign in)
+- Sign in: standalone page with sign in and register tabs and a Home button back to the website
+- Portal: a dashboard with a sidebar and top bar. Back to website and Sign out are always in the sidebar.
+  - Resident: Overview, My votes, My feedback (with a form to send new feedback), Profile
+  - Ward officer: Overview, Feedback queue, Project progress, Profile
+  - Administrator: all of the above plus Add project and Users (role management)
 
 ### Source map
 
@@ -44,7 +47,10 @@ Built with React 18, React Router 6 and Vite. JavaScript only. Styled with Tailw
     src/store.jsx     state, reducer, role checks, input cleaning, localStorage persistence
     src/ui.jsx        icons, skyline art, project card, progress bar
     src/pages.jsx     public pages and sign in
-    src/portal.jsx    resident, officer and admin views
+    src/portal.jsx    portal shell (sidebar, top bar) and every portal view
+    src/auth.jsx      standalone sign in and register page
+    src/cls.js        shared Tailwind class strings
+    scripts/hash-password.mjs   generates password hashes for seed accounts
     src/styles.css    Atomic Orange and Ice Cream Blue theme
 
 ### Design
@@ -69,9 +75,25 @@ Other commands:
     npm run build      create the production build in dist/
     npm run preview    serve the production build locally
 
-Demo access: open Sign in and press Continue as resident, ward officer or administrator.
+## Demo accounts (private)
 
-Real resident accounts: register on the Sign in page, then sign out and back in with the same email and password. Passwords are hashed in the browser with PBKDF2 (salted, 150000 iterations) and stored only in this browser. Demo accounts have no password and use the buttons.
+The website does not show or hint at these accounts. Use them on the Sign in page.
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Resident | amina.wanjiru@sisi.local | YznTzLvLS3zoi7qp |
+| Ward officer | james.otieno@sisi.local | 25g3D0sRJp5VaxgB |
+| Administrator | grace.mutua@sisi.local | 5kNCvv-zVdythj0L |
+
+Keep this README private: deploy only the contents of dist/ and never publish this file with the site. Passwords are stored as salted PBKDF2 hashes, so they cannot be read from the built files. Because the whole app runs in the browser, this is still a demonstration: anyone using DevTools on their own copy can change their own local data. Real protection needs a server.
+
+To change a demo password, run:
+
+    node scripts/hash-password.mjs "new password of 10 or more characters"
+
+and paste the printed salt and hash into the matching user in the seed data in src/store.jsx. After changing seed data, bump the storage key (sisi_v3) in src/store.jsx so existing browsers load the new data. Signed in users can also change their own password under Portal, Profile.
+
+Real resident accounts: register on the Sign in page, then sign in again later with the same email and password. Registered accounts are always residents. Administrators can change roles under Portal, Users.
 
 Available scripts (running npm run with no name only lists them): dev, start (same as dev), build, preview.
 
